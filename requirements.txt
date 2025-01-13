@@ -1,3 +1,4 @@
-Django==4.2
-django-redshift-backend==3.0.0
+Django>=4.2
+django-redshift-backend==5.0.0
 psycopg2-binary
+psycopg

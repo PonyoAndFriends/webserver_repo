@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+
+{% block title %} Search result category {% endblock %}
+{% block style %}
+<!-- Favicon-->
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+
+<!-- Bootstrap icons-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+
+<!-- Core theme CSS (includes Bootstrap)-->
+<link href="../../static/css/result_styles.css" rel="stylesheet" />
+<style>
+    input[type="radio"], input[type="checkbox"] {
+        display: none; /* 기본 버튼 숨김 */
+    }
+
+    .form-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px; /* 각 요소 간 간격 */
+            padding: 20px;
+        }
+
+        .form-container fieldset {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            min-width: 200px; /* 최소 너비 설정 */
+        }
+
+        .form-container legend {
+            width: 100%;
+            text-align: center;
+            padding-bottom: 5px;
+            font-weight: bold;
+            color: rgb(30, 30, 30);
+        }
+
+        .custom-select {
+            width: 100%;
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        .custom-button {
+        display: inline-block;
+        padding: 10px 20px;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        background-color: #fff;
+        color: #333;
+        font-size: 14px;
+        cursor: pointer;
+        margin-right: 10px;
+        text-align: center;
+    }
+
+     /* 선택된 상태 스타일 */
+    input[type="radio"]:checked + .custom-button,
+    input[type="checkbox"]:checked + .custom-button {
+        background-color: #000000;
+        color: #fff;
+        border-color: #000000;
+    }
+
+
+        /* 반응형 디자인 */
+        @media (max-width: 800px) {
+            .form-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-container fieldset {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+</style>
+{% endblock %}
+
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="#!">
+            <img style="height: auto; width: 40%;" src="../../static/assets/img/logo.png">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+    </div>
+</nav>
+
+<!-- Header-->
+{% block content %}
+<header class="bg-light py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <div class="row input-group-newsletter text-center">
+                <div class="col-auto" style="margin: 0; width: auto;"><input style="height: 50px; width: 500px;" class="form-control" id="search_input" type="text" placeholder="관심있는 패션 키워드를 검색해 주세요" /></div>
+                <div class="col-auto" style="margin:0 50%; width: auto;"><button type="button" style="background-color:rgba(0, 0, 0, 0); border: none;"><i class="fa-solid fa-magnifying-glass"></i></button></div>
+            </div>
+            <div class="form-container">
+                <!-- 성별 선택 -->
+                <fieldset>
+                    <legend>성별</legend>
+                    <radio-group>
+                        <input type="radio" id="male" name="gender" value="M" checked>
+                        <label for="male" class="custom-button">남성</label>
+                        <input type="radio" id="female" name="gender" value="F">
+                        <label for="female" class="custom-button">여성</label>
+                    </radio-group>
+                </fieldset>
+            
+                <!-- 플랫폼 선택 -->
+                <fieldset>
+                    <legend>플랫폼</legend>
+                    <select name="platform" class="custom-select dropdown" id="platform">
+                        <option value="musinsa">무신사</option>
+                        <option value="29cm">29cm</option>
+                        <option value="ably">에이블리</option>
+                    </select>
+                </fieldset>
+            
+                <!-- 대분류 선택 -->
+                <fieldset>
+                    <legend>대분류</legend>
+                    <select name="large_category" class="custom-select dropbox" id="large_category"></select>
+
+                    </select>
+                    </select>
+                </fieldset>
+            
+                <!-- 중분류 선택 -->
+                <fieldset>
+                    <legend>중분류</legend>
+                    <select name="middle_category" class="custom-select dropbox" id="middle_category"></select>
+                </fieldset>
+            
+                <!-- 소분류 선택 -->
+                <fieldset>
+                    <legend>소분류</legend>
+                    <select name="small_category" class="custom-select dropbox" id="small_category"></select>
+                </fieldset>
+            </div>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    // 사용자가 제공한 데이터
+                    const data = {
+                        M: {
+                            platforms: ["musinsa", "29cm"],
+                            categories: {
+                                아우터: ["재킷", "코트", "패딩", "플리스", "기타"],
+                                상의: ["티셔츠", "셔츠", "니트"],
+                                하의: ["팬츠"],
+                                신발: ["전체"]
+                            }
+                        },
+                        F: {
+                            platforms: ["musinsa", "29cm", "ably"],
+                            categories: {
+                                아우터: ["재킷", "플리스", "코트", "패딩", "기타"],
+                                상의: ["티셔츠", "셔츠", "니트"],
+                                하의: ["팬츠", "원피스", "스커트"],
+                                신발: ["전체"]
+                            }
+                        }
+                    };
+                
+                    const genderInputs = document.querySelectorAll('input[name="gender"]');
+                    const platformSelect = document.querySelector('#platform');
+                    const largeCategorySelect = document.querySelector('#large_category');
+                    const middleCategorySelect = document.querySelector('#middle_category');
+                    const smallCategorySelect = document.querySelector('#small_category');
+                
+                    // 플랫폼 및 대분류 데이터 업데이트
+                    const updatePlatformsAndCategories = (gender) => {
+                        // 플랫폼 업데이트
+                        platformSelect.innerHTML = '';
+                        data[gender].platforms.forEach(platform => {
+                            platformSelect.innerHTML += `<option value="${platform}">${platform}</option>`;
+                        });
+                
+                        // 대분류 업데이트
+                        largeCategorySelect.innerHTML = '';
+                        Object.keys(data[gender].categories).forEach(largeCategory => {
+                            largeCategorySelect.innerHTML += `<option value="${largeCategory}">${largeCategory}</option>`;
+                        });
+                
+                        // 중분류 및 소분류 초기화
+                        middleCategorySelect.innerHTML = '';
+                        smallCategorySelect.innerHTML = '';
+                    };
+                
+                    // 중분류 업데이트
+                    const updateMiddleCategory = (gender, largeCategory) => {
+                        middleCategorySelect.innerHTML = '';
+                        if (largeCategory && data[gender].categories[largeCategory]) {
+                            data[gender].categories[largeCategory].forEach(middleCategory => {
+                                middleCategorySelect.innerHTML += `<option value="${middleCategory}">${middleCategory}</option>`;
+                            });
+                        }
+                
+                        // 소분류 초기화
+                        smallCategorySelect.innerHTML = '';
+                    };
+                
+                    // 소분류 업데이트 (DB에서 가져옴)
+                    const updateSmallCategory = async () => {
+                        const gender = document.querySelector('input[name="gender"]:checked').value;
+                        const platform = platformSelect.value;
+                        const largeCategory = largeCategorySelect.value;
+                        const middleCategory = middleCategorySelect.value;
+                
+                        if (!middleCategory) return;
+                
+                        // 소분류 데이터 API 호출
+                        const response = await fetch(`/api/get-small-category?gender=${gender}&largeCategory=${largeCategory}&middleCategory=${middleCategory}&platform=${platform}`);
+                        const data = await response.json();
+                
+                        smallCategorySelect.innerHTML = '';
+                        data.forEach(smallCategory => {
+                            smallCategorySelect.innerHTML += `<option value="${smallCategory}">${smallCategory}</option>`;
+                        });
+                    };
+                
+                    // 이벤트 리스너 추가
+                    genderInputs.forEach(input => {
+                        input.addEventListener('change', () => {
+                            const gender = document.querySelector('input[name="gender"]:checked').value;
+                            updatePlatformsAndCategories(gender);
+                        });
+                    });
+                
+                    largeCategorySelect.addEventListener('change', () => {
+                        const gender = document.querySelector('input[name="gender"]:checked').value;
+                        const largeCategory = largeCategorySelect.value;
+                        updateMiddleCategory(gender, largeCategory);
+                    });
+                
+                    middleCategorySelect.addEventListener('change', updateSmallCategory);
+                
+                    // 초기 로드
+                    const initialGender = document.querySelector('input[name="gender"]:checked').value;
+                    updatePlatformsAndCategories(initialGender);
+                });
+                </script>
+            </div>
+        </div>
+</header>
+
+<!-- Section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        {% for product in products %}
+            {% if forloop.counter0|divisibleby:5 %}
+                <div class="row gx-4 gx-lg-5">
+            {% endif %}
+            
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="{{ product.img_url }}" alt="{{ product.product_name }}" />
+                    <p> <span class="fw-bolder">{{ product.platform }}</span> </p>
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder">{{ product.product_name }}</h5>
+                            <!-- Brand name-->
+                            <p>{{ product.brand_name_kr }} ({{ product.brand_name_en }})</p>
+                            <!-- Product price-->
+                            <p>
+                                <span class="text-muted text-decoration-line-through">{{ product.original_price }}</span>
+                                <span class="fw-bolder">{{ product.final_price }}원</span>
+                            </p>
+
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                    </div>
+                </div>
+            </div>
+    
+            {% if forloop.counter|divisibleby:5 or forloop.last %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

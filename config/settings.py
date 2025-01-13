@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 프로젝트 앱
+    'retailapp',  # retailapp을 INSTALLED_APPS에 추가
 ]
 
 MIDDLEWARE = [
@@ -69,15 +71,37 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django_redshift_backend',
+        'NAME': 'dev',  # Redshift 데이터베이스 이름
+        'USER': 'team3-2',  # Redshift 사용자 이름
+        'PASSWORD': 'Team3-2!',  # Redshift 비밀번호
+        'HOST': 'team3-2-cluster-1.cvkht4jvd430.ap-northeast-2.redshift.amazonaws.com',  # Redshift 엔드포인트
+        'PORT': '5439',  # Redshift 기본 포트
+        'OPTIONS': {
+            'sslmode': 'require',  # SSL 연결 필요 (Redshift는 기본적으로 SSL 사용)
+            'options': '-c search_path=retail_silver_layer',  # 스키마 설정
+        },
     }
+}
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
 }
 
 
@@ -103,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko'
 
 TIME_ZONE = 'UTC'
 

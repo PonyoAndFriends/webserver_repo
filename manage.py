@@ -3,6 +3,8 @@
 import os
 import sys
 
+# 현재 파일의 디렉토리 경로를 sys.path에 추가
+sys.path.append('/Users/seoha/fashion_insight_web/webserver_repo')
 
 def main():
     """Run administrative tasks."""

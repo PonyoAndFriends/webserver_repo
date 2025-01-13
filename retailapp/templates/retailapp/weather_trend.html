@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Superset 대시보드{% endblock %}
+{% block style %}
+    <style>
+        /* iframe 스타일 조정 */
+        .superset-dashboard {
+            width: 100%;
+            height: 800px;
+            border: none;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <h1>Superset 대시보드 통합</h1>
+    <iframe 
+    src="http://localhost:8088/superset/dashboard/your_dashboard_id/"
+    width="100%"
+    height="800"
+    frameborder="0">
+    </iframe>
+{% endblock %}  

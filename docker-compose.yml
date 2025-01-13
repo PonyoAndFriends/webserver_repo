@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  django:
+    build:
+      context: .  # 현재 디렉토리를 빌드 컨텍스트로 지정
+      dockerfile: Dockerfile  # Dockerfile의 경로 명시
+    container_name: django
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app  # 현재 디렉토리를 컨테이너 내부로 마운트
+    command: python manage.py runserver 0.0.0.0:8000
+
+  superset:
+    image: apache/superset
+    container_name: superset
+    ports:
+      - "8088:8088"
+    environment:
+      SUPERSET_DATABASE_URI: "postgresql+psycopg2://team3-2:Team3-2!@redshift:5433/dev"
+      SECRET_KEY: ponyo_superset
+    volumes:
+      - ./superset:/app/superset_home
+    depends_on:
+      - redshift
+
+  redshift:
+    image: postgres:15
+    container_name: redshift
+    ports:
+      - "5439:5432"
+    environment:
+      POSTGRES_USER: team3-2
+      POSTGRES_PASSWORD: Team3-2!
+      POSTGRES_DB: dev
+    volumes:
+      - redshift_data:/var/lib/postgresql/data
+
+volumes:
+  redshift_data:
