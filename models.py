@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+
 # Unable to inspect table 'ably_product_review_detail_tb'
 # The error was: list index out of range
 
@@ -15,29 +16,29 @@ class AuthGroup(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'auth_group'
+        db_table = "auth_group"
 
 
 class AuthGroupPermissions(models.Model):
     id = models.BigAutoField(primary_key=True)
     group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
-    permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
+    permission = models.ForeignKey("AuthPermission", models.DO_NOTHING)
 
     class Meta:
         managed = False
-        db_table = 'auth_group_permissions'
-        unique_together = (('group', 'permission'),)
+        db_table = "auth_group_permissions"
+        unique_together = (("group", "permission"),)
 
 
 class AuthPermission(models.Model):
     name = models.CharField()
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
+    content_type = models.ForeignKey("DjangoContentType", models.DO_NOTHING)
     codename = models.CharField()
 
     class Meta:
         managed = False
-        db_table = 'auth_permission'
-        unique_together = (('content_type', 'codename'),)
+        db_table = "auth_permission"
+        unique_together = (("content_type", "codename"),)
 
 
 class AuthUser(models.Model):
@@ -54,7 +55,7 @@ class AuthUser(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'auth_user'
+        db_table = "auth_user"
 
 
 class AuthUserGroups(models.Model):
@@ -64,8 +65,8 @@ class AuthUserGroups(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'auth_user_groups'
-        unique_together = (('user', 'group'),)
+        db_table = "auth_user_groups"
+        unique_together = (("user", "group"),)
 
 
 class AuthUserUserPermissions(models.Model):
@@ -75,8 +76,10 @@ class AuthUserUserPermissions(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'auth_user_user_permissions'
-        unique_together = (('user', 'permission'),)
+        db_table = "auth_user_user_permissions"
+        unique_together = (("user", "permission"),)
+
+
 # Unable to inspect table 'cm29_product_review_detail_tb'
 # The error was: list index out of range
 
@@ -87,12 +90,14 @@ class DjangoAdminLog(models.Model):
     object_repr = models.CharField()
     action_flag = models.SmallIntegerField()
     change_message = models.CharField()
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
+    content_type = models.ForeignKey(
+        "DjangoContentType", models.DO_NOTHING, blank=True, null=True
+    )
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
 
     class Meta:
         managed = False
-        db_table = 'django_admin_log'
+        db_table = "django_admin_log"
 
 
 class DjangoContentType(models.Model):
@@ -101,8 +106,8 @@ class DjangoContentType(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'django_content_type'
-        unique_together = (('app_label', 'model'),)
+        db_table = "django_content_type"
+        unique_together = (("app_label", "model"),)
 
 
 class DjangoMigrations(models.Model):
@@ -113,7 +118,7 @@ class DjangoMigrations(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'django_migrations'
+        db_table = "django_migrations"
 
 
 class DjangoSession(models.Model):
@@ -123,7 +128,7 @@ class DjangoSession(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'django_session'
+        db_table = "django_session"
 
 
 class MasterCategoryTb(models.Model):
@@ -135,7 +140,9 @@ class MasterCategoryTb(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'master_category_tb'
+        db_table = "master_category_tb"
+
+
 # Unable to inspect table 'musinsa_product_review_detail_tb'
 # The error was: list index out of range
 
@@ -153,7 +160,7 @@ class MusinsaSnapBrandRankingTb(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'musinsa_snap_brand_ranking_tb'
+        db_table = "musinsa_snap_brand_ranking_tb"
 
 
 class MusinsaSnapUserRankingTb(models.Model):
@@ -166,7 +173,7 @@ class MusinsaSnapUserRankingTb(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'musinsa_snap_user_ranking_tb'
+        db_table = "musinsa_snap_user_ranking_tb"
 
 
 class NaverShoppingKwdTb(models.Model):
@@ -184,11 +191,14 @@ class NaverShoppingKwdTb(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'naver_shopping_kwd_tb'
+        db_table = "naver_shopping_kwd_tb"
+
+
 # Unable to inspect table 'product_detail_tb'
 # The error was: list index out of range
 # Unable to inspect table 'ranking_tb'
 # The error was: list index out of range
+
 
 class ProductDetail(models.Model):
     platform = models.CharField(max_length=100)  # varchar(100)
@@ -222,7 +232,7 @@ class SubCategoryTb(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sub_category_tb'
+        db_table = "sub_category_tb"
 
 
 class TestTable(models.Model):
@@ -231,7 +241,7 @@ class TestTable(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'test_table'
+        db_table = "test_table"
 
 
 class WeatherCenterLocationTb(models.Model):
@@ -240,11 +250,13 @@ class WeatherCenterLocationTb(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'weather_center_location_tb'
+        db_table = "weather_center_location_tb"
 
 
 class WeatherDailyTb(models.Model):
-    stn = models.IntegerField(primary_key=True)  # The composite primary key (stn, tm) found, that is not supported. The first column is selected.
+    stn = models.IntegerField(
+        primary_key=True
+    )  # The composite primary key (stn, tm) found, that is not supported. The first column is selected.
     tm = models.DateField()
     ws_avg = models.FloatField(blank=True, null=True)
     ws_max = models.FloatField(blank=True, null=True)
@@ -262,8 +274,8 @@ class WeatherDailyTb(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'weather_daily_tb'
-        unique_together = (('stn', 'tm'),)
+        db_table = "weather_daily_tb"
+        unique_together = (("stn", "tm"),)
 
 
 class YoutubeVideoTb(models.Model):
@@ -281,4 +293,4 @@ class YoutubeVideoTb(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'youtube_video_tb'
+        db_table = "youtube_video_tb"
