@@ -8,6 +8,7 @@ SUPERSET_CHART_API = f"{SUPERSET_BASE_URL}/api/v1/chart/"
 SUPERSET_USERNAME = os.getenv("SUPERSET_USERNAME", "admin")
 SUPERSET_PASSWORD = os.getenv("SUPERSET_PASSWORD", "admin")
 
+
 def get_access_token():
     login_payload = {
         "username": SUPERSET_USERNAME,
@@ -28,6 +29,7 @@ def get_access_token():
         print(f"Error during login: {e}")
         return None
 
+
 def fetch_specific_chart(access_token, chart_id):
     url = f"{SUPERSET_BASE_URL}/api/v1/chart/{chart_id}"
     headers = {
@@ -42,6 +44,7 @@ def fetch_specific_chart(access_token, chart_id):
     except requests.exceptions.RequestException as e:
         print(f"Error fetching chart data for ID {chart_id}: {e}")
         return {"error": str(e)}
+
 
 if __name__ == "__main__":
     token = get_access_token()

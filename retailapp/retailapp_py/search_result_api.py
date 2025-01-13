@@ -5,7 +5,7 @@ params = {
     "gender": "F",
     "largeCategory": "상의",
     "middleCategory": "셔츠",
-    "platform": "29cm"
+    "platform": "29cm",
 }
 
 response = requests.get(url, params=params)
