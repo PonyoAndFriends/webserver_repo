@@ -122,7 +122,38 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+"""
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        # 'LOCATION': 'redis://127.0.0.1:6379/1',  # Redis 서버 주소
+        'LOCATION': 'team3-2-cache-0001-001.team3-2-cache.mk7g4j.apn2.cache.amazonaws.com:6379',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}   
+"""
 
+import environ
+
+env = environ.Env()
+
+REDIS_URL = (
+    "team3-2-cache-0001-001.team3-2-cache.mk7g4j.apn2.cache.amazonaws.com:6379/1"
+)
+# CACHES
+if env("REDIS_URL", default=None):
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": env("REDIS_URL"),
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "IGNORE_EXCEPTIONS": True,
+            },
+        }
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

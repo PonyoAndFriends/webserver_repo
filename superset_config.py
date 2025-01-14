@@ -25,3 +25,15 @@ FEATURE_FLAGS = {
 SESSION_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE = False
 WTF_CSRF_ENABLED = False
+CORS_OPTIONS = {
+    "supports_credentials": True,
+    "allow_headers": ["*"],
+    "resources": ["*"],
+    "origins": [
+        "http://localhost:8088",  # Superset
+        "http://localhost:8000",  # Django
+    ],
+}
+ENABLE_CORS = True
+
+AUTH_TYPE = "AUTH_OAUTH"
