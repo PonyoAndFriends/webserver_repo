@@ -19,3 +19,16 @@ DEFAULT_FEATURE_FLAGS = {
   "DASHBOARD_RBAC": True,  # it's obligatory
   "ENABLE_IFRAME_EMBED": True,  # 아이프레임 사용 허용
 }
+
+CORS_OPTIONS = {
+    'supports_credentials': True,
+    'allow_headers': ['*'],
+    'resources': ['*'],
+    'origins': [
+        'http://localhost:8088',  # Superset
+        'http://localhost:8000',  # Django
+    ]
+}
+ENABLE_CORS = True
+
+AUTH_TYPE = AUTH_OAUTH

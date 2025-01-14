@@ -26,6 +26,8 @@ services:
       - ./superset_config.py:/app/pythonpath/superset_config.py
     depends_on:
       - redshift
+      
+  
 
   redshift:
     image: postgres:15
@@ -41,3 +43,5 @@ services:
 
 volumes:
   redshift_data:
+
+  
