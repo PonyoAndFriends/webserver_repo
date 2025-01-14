@@ -17,7 +17,7 @@
             <!-- Sidebar Toggle-->
             <button style="margin-left: 5%;"class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" style="margin-left: 4%;" href="index.html"><img style="height: auto; width: 100%;" src="../../static/assets/img/logo_white.png"></a>
+            <a class="navbar-brand ps-3" style="margin-left: 4%;" href="{% url 'retailapp:index' %}"><img style="height: auto; width: 100%;" src="../../static/assets/img/logo_white.png"></a>
             
         </nav>
         <div id="layoutSidenav">
@@ -26,12 +26,12 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">검색</div>
-                            <a class="nav-link" href="index.html">
+                            <a class="nav-link" href="{% url 'retailapp:search_result' %}">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
                                 Search
                             </a>
                             <div class="sb-sidenav-menu-heading">날씨기반 분석</div>
-                            <a class="nav-link" href="index.html">
+                            <a class="nav-link" href="{% url 'retailapp:weather_trend' %}">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-temperature-high"></i></div>
                                 WEATHER
                             </a>
@@ -43,8 +43,8 @@
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">User Snap</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Brand Snap</a>
+                                    <a class="nav-link" href="{% url 'retailapp:snap_user' %}">User Snap</a>
+                                    <a class="nav-link" href="{% url 'retailapp:snap_brand' %}">Brand Snap</a>
                                 </nav>
                             </div>
                             
