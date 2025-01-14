@@ -22,3 +22,20 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("retailapp/", include("retailapp.urls")),
 ]
+
+from django.http import HttpResponse
+import requests
+
+def proxy_superset(request, path):
+    superset_url = f"http://localhost:8088/{path}"
+    headers = {
+        key: value for key, value in request.headers.items() if key.lower() != "host"
+    }
+    response = requests.get(superset_url, headers=headers)
+    django_response = HttpResponse(
+        response.content, status=response.status_code, content_type=response.headers.get("Content-Type")
+    )
+    for key, value in response.headers.items():
+        if key.lower() not in ["content-encoding", "transfer-encoding", "content-length"]:
+            django_response[key] = value
+    return django_response

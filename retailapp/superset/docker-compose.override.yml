@@ -1,5 +1,0 @@
-version: "3.4"
-services:
-  superset:
-    environment:
-      SUPERSET_DATABASE_URI: "postgresql+psycopg2://team3-2:Team3-2!@team3-2-cluster-1.cvkht4jvd430.ap-northeast-2.redshift.amazonaws.com:5439/dev"

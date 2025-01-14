@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,9 +48,11 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware"
 ]
+
+
+# "django.middleware.clickjacking.XFrameOptionsMiddleware",
 
 ROOT_URLCONF = "config.urls"
 
@@ -134,10 +137,9 @@ CACHES = {
     }
 }   
 '''
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-import environ
 env = environ.Env()
-
 REDIS_URL="team3-2-cache-0001-001.team3-2-cache.mk7g4j.apn2.cache.amazonaws.com:6379/1"
 # CACHES
 if env("REDIS_URL", default=None):

@@ -31,4 +31,33 @@ CORS_OPTIONS = {
 }
 ENABLE_CORS = True
 
-AUTH_TYPE = AUTH_OAUTH
+# superset_config.py
+from flask_appbuilder.security.manager import AUTH_DB
+# AUTH_TYPE을 PUBLIC으로 설정
+from flask_appbuilder.security.manager import AUTH_OID
+
+# AUTH_TYPE = AUTH_DB
+AUTH_TYPE = AUTH_OID  # OpenID 기반 인증 사용
+
+# Remove or customize the X-Frame-Options header
+CUSTOM_SECURITY_MANAGER = None
+WTF_CSRF_ENABLED = False  # Optional if you are testing
+
+  # Dashboard embedding
+GUEST_ROLE_NAME = "Gamma"
+# 게스트 계정을 익명 사용자로 설정
+PUBLIC_ROLE_LIKE = "Gamma"  # 읽기 전용 역할 부여
+
+GUEST_TOKEN_JWT_SECRET = "test-guest-secret-change-me"
+GUEST_TOKEN_JWT_ALGO = "HS256"
+GUEST_TOKEN_HEADER_NAME = "X-GuestToken"
+GUEST_TOKEN_JWT_EXP_SECONDS = 300
+TALISMAN_ENABLED = False
+ENABLE_CORS = True
+HTTP_HEADERS={"X-Frame-Options":"ALLOWALL"}
+
+
+
+# 로그인을 요구하지 않도록 설정
+AUTH_USER_REGISTRATION = True
+AUTH_USER_REGISTRATION_ROLE = "Public"  # 기본 Public 권한으로 설정
