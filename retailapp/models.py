@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class ProductDetail(models.Model):
     platform = models.CharField(max_length=100)  # varchar(100)
     master_category_name = models.CharField(max_length=32)  # varchar(32)
@@ -27,4 +28,4 @@ class SupersetDashboard(models.Model):
     description = models.TextField(blank=True, null=True)
 
     class Meta:
-        app_label = 'retailapp'
+        app_label = "retailapp"
