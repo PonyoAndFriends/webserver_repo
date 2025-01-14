@@ -5,8 +5,11 @@ from django.http import JsonResponse
 from retailapp.models import ProductDetail
 from django.db.models import Q
 
+
 def index(request):
-    return render(request, "retailapp/index.html")  # 프로젝트 수준의 templates/index.html
+    return render(
+        request, "retailapp/index.html"
+    )  # 프로젝트 수준의 templates/index.html
 
 
 def redshift_testing(request):
@@ -32,19 +35,20 @@ def list_dashboards(request):
     return HttpResponse(list(dashboards), content_type="application/json")
 """
 
-'''
+"""
 def search_result(request):
     products = ProductDetail.objects.all().order_by('plarform')
     # products = Product.objects.all()
     return render(request, "retailapp/search_result.html", {"products": products})
-'''
+"""
+
 
 def search_result(request):
-    query = request.GET.get('query', '').strip()
-    platform = request.GET.get('platform', '').strip()
-    gender = request.GET.get('gender', '').strip()
-    master_category = request.GET.get('master_category', '').strip()
-    small_category = request.GET.get('small_category', '').strip()
+    query = request.GET.get("query", "").strip()
+    platform = request.GET.get("platform", "").strip()
+    gender = request.GET.get("gender", "").strip()
+    master_category = request.GET.get("master_category", "").strip()
+    small_category = request.GET.get("small_category", "").strip()
 
     products = ProductDetail.objects.all()
 
@@ -59,29 +63,30 @@ def search_result(request):
     # 검색어 필터링
     if query:
         products = products.filter(
-            Q(platform__icontains=query) |
-            Q(master_category_name__icontains=query) |
-            Q(small_category_name__icontains=query) |
-            Q(product_name__icontains=query) |
-            Q(brand_name_kr__icontains=query) |
-            Q(brand_name_en__icontains=query)
+            Q(platform__icontains=query)
+            | Q(master_category_name__icontains=query)
+            | Q(small_category_name__icontains=query)
+            | Q(product_name__icontains=query)
+            | Q(brand_name_kr__icontains=query)
+            | Q(brand_name_en__icontains=query)
         )
         # 검색어가 있을 때는 정렬을 기본 정렬 또는 다른 기준으로 설정할 수 있습니다.
         # 여기서는 검색어가 있을 때도 platform으로 정렬합니다.
-        products = products.order_by('platform')
+        products = products.order_by("platform")
     else:
         # 검색어가 없을 때는 platform으로 정렬
-        products = products.order_by('platform')
+        products = products.order_by("platform")
 
     context = {
-        'products': products,
-        'query': query,
-        'platform': platform,
-        'master_category': master_category,
-        'small_category': small_category,
+        "products": products,
+        "query": query,
+        "platform": platform,
+        "master_category": master_category,
+        "small_category": small_category,
     }
 
     return render(request, "retailapp/search_result.html", context)
+
 
 def superset_dashboard(request):
     return render(request, "superset_dashboard.html")
@@ -92,15 +97,17 @@ def weather_trend(request):
 
 
 def get_small_category(request):
-    master_category = request.GET.get('masterCategory', '').strip()
+    master_category = request.GET.get("masterCategory", "").strip()
 
     if not master_category:
         return JsonResponse([], safe=False)
 
     # ProductDetail 모델에서 소분류를 추출
-    small_categories = ProductDetail.objects.filter(
-        master_category_name=master_category
-    ).values_list('small_category_name', flat=True).distinct()
+    small_categories = (
+        ProductDetail.objects.filter(master_category_name=master_category)
+        .values_list("small_category_name", flat=True)
+        .distinct()
+    )
 
     small_categories = list(small_categories)
 
