@@ -18,5 +18,5 @@ urlpatterns = [
         views.get_product_reviews_with_cache,
         name="search_result/get_product_reviews_with_cache",
     ),
-    path("health", views.health_check)
+    path("health", views.health_check),
 ]
