@@ -10,7 +10,7 @@ services:
       - "8000:8000"
     volumes:
       - .:/app  # 현재 디렉토리를 컨테이너 내부로 마운트
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
 
   superset:
     build:
@@ -25,24 +25,34 @@ services:
     volumes:
       - ./superset:/app/superset_home
       - ./superset_config.py:/app/pythonpath/superset_config.py
+      - ./requirements.txt:/app/pythonpath/requirements.txt
     depends_on:
-      - redshift
-      
-  
+      redshift:
+        condition: service_healthy
+    command: >
+      sh -c "
+      pip install -r /app/pythonpath/requirements.txt &&
+      superset db upgrade &&
+      superset init &&
+      superset run -h 0.0.0.0 -p 8088
+      "
 
   redshift:
-    image: postgres:15
-    container_name: redshift
-    ports:
-      - "5439:5432"
-    environment:
-      POSTGRES_USER: team3-2
-      POSTGRES_PASSWORD: Team3-2!
-      POSTGRES_DB: dev
-    volumes:
-      - redshift_data:/var/lib/postgresql/data
+  image: postgres:15
+  container_name: redshift
+  ports:
+    - "5439:5432"
+  environment:
+    POSTGRES_USER: team3-2
+    POSTGRES_PASSWORD: Team3-2!
+    POSTGRES_DB: dev
+  volumes:
+    - redshift_data:/var/lib/postgresql/data
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U team3-2"]
+    interval: 10s
+    timeout: 5s
+    retries: 5
 
 volumes:
   redshift_data:
-
-  

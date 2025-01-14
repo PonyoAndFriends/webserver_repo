@@ -190,3 +190,11 @@ MIDDLEWARE = [
 CORS_ALLOW_ALL_ORIGINS = True
 
 X_FRAME_OPTIONS = 'ALLOWALL'
+
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'team3-2-alb-1699055578.ap-northeast-2.elb.amazonaws.com',  # ALB DNS 추가
+    '10.0.133.40',
+    '10.0.29.216'
+    ]

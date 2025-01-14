@@ -12,3 +12,9 @@ psycopg
 
 # django-cors-headers
 django-cors-headers
+
+# flask-cors
+flask-cors
+
+# django-environ
+django-environ

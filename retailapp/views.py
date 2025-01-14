@@ -180,3 +180,6 @@ def get_small_category(request):
     small_categories = list(small_categories)
 
     return JsonResponse(small_categories, safe=False)
+
+def health_check(request):
+    return JsonResponse({"status": "ok"}, status=200)
