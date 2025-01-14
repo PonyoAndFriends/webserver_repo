@@ -148,3 +148,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 X_FRAME_OPTIONS = "ALLOWALL"
 CSRF_COOKIE_SECURE = True
+
+INSTALLED_APPS += [
+    'corsheaders',
+]
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+] + MIDDLEWARE
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+X_FRAME_OPTIONS = 'ALLOWALL'
