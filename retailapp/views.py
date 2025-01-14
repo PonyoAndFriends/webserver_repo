@@ -47,11 +47,6 @@ def search_result(request):
     query = request.GET.get("query", "").strip()
     platform = request.GET.get("platform", "").strip()
     gender = request.GET.get("gender", "").strip()
-<<<<<<< HEAD
-    master_category = request.GET.get("master_category", "").strip()
-    small_category = request.GET.get("small_category", "").strip()
-=======
->>>>>>> 4392c2fc0e20f00dadde67c89d52d42fb31df2da
 
     products = ProductDetail.objects.all().order_by("ranking", "platform")
 
@@ -63,20 +58,6 @@ def search_result(request):
     if query:
         products = products.filter(
             Q(platform__icontains=query)
-<<<<<<< HEAD
-            | Q(master_category_name__icontains=query)
-            | Q(small_category_name__icontains=query)
-            | Q(product_name__icontains=query)
-            | Q(brand_name_kr__icontains=query)
-            | Q(brand_name_en__icontains=query)
-        )
-        # 검색어가 있을 때는 정렬을 기본 정렬 또는 다른 기준으로 설정할 수 있습니다.
-        # 여기서는 검색어가 있을 때도 platform으로 정렬합니다.
-        products = products.order_by("platform")
-    else:
-        # 검색어가 없을 때는 platform으로 정렬
-        products = products.order_by("platform")
-=======
             | Q(product_name__icontains=query)
             | Q(brand_name_kr__icontains=query)
         )
@@ -86,24 +67,16 @@ def search_result(request):
     else:
         # 검색어가 없을 때는 platform으로 정렬
         products = products
->>>>>>> 4392c2fc0e20f00dadde67c89d52d42fb31df2da
 
     context = {
         "products": products,
         "query": query,
         "platform": platform,
-<<<<<<< HEAD
-        "master_category": master_category,
-        "small_category": small_category,
-=======
->>>>>>> 4392c2fc0e20f00dadde67c89d52d42fb31df2da
     }
 
     return render(request, "retailapp/search_result.html", context)
 
 
-<<<<<<< HEAD
-=======
 def item_detail(request, product_id):
     product = get_object_or_404(ProductDetail, pk=product_id)
     reviews = (
@@ -183,7 +156,6 @@ def get_product_reviews_with_cache(request):
     return JsonResponse(all_reviews, safe=False)
 
 
->>>>>>> 4392c2fc0e20f00dadde67c89d52d42fb31df2da
 def superset_dashboard(request):
     return render(request, "superset_dashboard.html")
 
