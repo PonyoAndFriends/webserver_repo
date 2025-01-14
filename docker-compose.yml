@@ -19,8 +19,8 @@ services:
     ports:
       - "8088:8088"
     environment:
-      SUPERSET_DATABASE_URI: "postgresql+psycopg2://team3-2:Team3-2!@team3-2-cluster-1.cvkht4jvd430.ap-northeast-2.redshift.amazonaws.com:5433/dev"
-      SECRET_KEY: ponyo_superset
+      SUPERSET_DATABASE_URI: "postgresql+psycopg2://team3-2:Team3-2!@redshift:5432/dev"  # redshift 컨테이너로 설정
+      SUPERSET_SECRET_KEY: ponyo_superset
     volumes:
       - ./superset:/app/superset_home
       - ./superset_config.py:/app/pythonpath/superset_config.py
