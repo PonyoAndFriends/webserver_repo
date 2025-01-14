@@ -221,6 +221,7 @@ class SilverProductDetail(models.Model):
         db_table = '"retail_silver_layer"."product_detail_tb"'  # 테이블 이름
         managed = True  # Django가 테이블을 관리하지 않도록 설정
 
+
 class ProductDetail(models.Model):
     platform = models.CharField(max_length=100)  # varchar(100)
     cat_depth_1 = models.CharField(max_length=32)  # varchar(32)
@@ -300,6 +301,7 @@ class WeatherDailyTb(models.Model):
         db_table = "weather_daily_tb"
         unique_together = (("stn", "tm"),)
 
+
 class Item(models.Model):
     product_id = models.IntegerField()
     review_content = models.TextField(max_length=4000)
@@ -312,6 +314,7 @@ class Item(models.Model):
 
     def __str__(self):
         return f"Review {self.id} for Product {self.product_id}"
+
 
 class YoutubeVideoTb(models.Model):
     video_id = models.CharField(primary_key=True)

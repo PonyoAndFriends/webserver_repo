@@ -4,9 +4,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from retailapp.models import ProductDetail
 from django.db.models import Q
-from .models import Item
 from django.core.cache import cache
-import re
 
 
 def index(request):
@@ -36,30 +34,31 @@ def list_dashboards(request):
     return HttpResponse(list(dashboards), content_type="application/json")
 """
 
-'''
+"""
 def search_result(request):
     products = ProductDetail.objects.all().order_by('plarform')
     # products = Product.objects.all()
     return render(request, "retailapp/search_result.html", {"products": products})
-'''
+"""
+
 
 def search_result(request):
-    query = request.GET.get('query', '').strip()
-    platform = request.GET.get('platform', '').strip()
-    gender = request.GET.get('gender', '').strip()
+    query = request.GET.get("query", "").strip()
+    platform = request.GET.get("platform", "").strip()
+    gender = request.GET.get("gender", "").strip()
 
-    products = ProductDetail.objects.all().order_by('ranking', 'platform')
-    
+    products = ProductDetail.objects.all().order_by("ranking", "platform")
+
     # 필터링 옵션 적용
     if platform:
         products = products.filter(platform=platform)
-    
+
     # 검색어 필터링
     if query:
         products = products.filter(
-            Q(platform__icontains=query) |
-            Q(product_name__icontains=query) |
-            Q(brand_name_kr__icontains=query)
+            Q(platform__icontains=query)
+            | Q(product_name__icontains=query)
+            | Q(brand_name_kr__icontains=query)
         )
         # 검색어가 있을 때는 정렬을 기본 정렬 또는 다른 기준으로 설정할 수 있습니다.
         # 여기서는 검색어가 있을 때도 platform으로 정렬합니다.
@@ -69,36 +68,42 @@ def search_result(request):
         products = products
 
     context = {
-        'products': products,
-        'query': query,
-        'platform': platform,
+        "products": products,
+        "query": query,
+        "platform": platform,
     }
 
     return render(request, "retailapp/search_result.html", context)
 
+
 def item_detail(request, product_id):
     product = get_object_or_404(ProductDetail, pk=product_id)
-    reviews = product.reviews.all()  # related_name='reviews'를 사용해 연결된 리뷰를 가져옴
+    reviews = (
+        product.reviews.all()
+    )  # related_name='reviews'를 사용해 연결된 리뷰를 가져옴
 
     # 리뷰 데이터를 리스트로 변환
     reviews_data = [
         {
-            'reviewer_name': review.reviewer_name,
-            'rating': review.rating,
-            'comment': review.comment,
-            'created_at': review.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            "reviewer_name": review.reviewer_name,
+            "rating": review.rating,
+            "comment": review.comment,
+            "created_at": review.created_at.strftime("%Y-%m-%d %H:%M:%S"),
         }
         for review in reviews
     ]
 
-    return JsonResponse({
-        'product_id': product.product_id,
-        'product_name': product.product_name,
-        'price': float(product.price),
-        'description': product.description,
-        'image_url': product.image.url,
-        'reviews': reviews_data,
-    })
+    return JsonResponse(
+        {
+            "product_id": product.product_id,
+            "product_name": product.product_name,
+            "price": float(product.price),
+            "description": product.description,
+            "image_url": product.image.url,
+            "reviews": reviews_data,
+        }
+    )
+
 
 def get_product_reviews_with_cache(request):
     product_id = request.GET.get("product_id")  # 프론트에서 전달된 product_id
@@ -116,14 +121,18 @@ def get_product_reviews_with_cache(request):
         return JsonResponse(cached_data, safe=False)
 
     # 2. 캐시에 데이터가 없으면 Redshift에서 데이터 조회
-    review_tables = ['"retail_silver_layer"."musinsa_product_review_detail_tb"',  '"retail_silver_layer"."cm29_product_review_detail_tb"', '"retail_silver_layer"."ably_product_review_detail_tb"']  # 세 플랫폼 테이블
+    review_tables = [
+        '"retail_silver_layer"."musinsa_product_review_detail_tb"',
+        '"retail_silver_layer"."cm29_product_review_detail_tb"',
+        '"retail_silver_layer"."ably_product_review_detail_tb"',
+    ]  # 세 플랫폼 테이블
     all_reviews = []
 
     for table in review_tables:
         # "."로 분리하고 두 번째 부분에서 "musinsa" 추출
-        platform_name = table.split('.')[1].split('_')[0].strip('"')
-        if platform_name == 'cm29':
-            platform_name = '29CM'
+        platform_name = table.split(".")[1].split("_")[0].strip('"')
+        if platform_name == "cm29":
+            platform_name = "29CM"
 
         query = f"""
             SELECT *
@@ -131,13 +140,13 @@ def get_product_reviews_with_cache(request):
             WHERE product_id = %s
             ORDER BY review_date DESC;  -- 날짜순 정렬
             """
-        with connections['default'].cursor() as cursor:
+        with connections["default"].cursor() as cursor:
             cursor.execute(query, [product_id])
             rows = cursor.fetchall()
             columns = [col[0] for col in cursor.description]
-            all_reviews.extend([
-                {**dict(zip(columns, row)), "platform": platform_name} for row in rows
-            ])
+            all_reviews.extend(
+                [{**dict(zip(columns, row)), "platform": platform_name} for row in rows]
+            )
 
     # 캐시에 저장 (유효 시간: 300초)
     cache.set(cache_key, all_reviews, timeout=300)
@@ -155,15 +164,17 @@ def weather_trend(request):
 
 
 def get_small_category(request):
-    master_category = request.GET.get('masterCategory', '').strip()
+    master_category = request.GET.get("masterCategory", "").strip()
 
     if not master_category:
         return JsonResponse([], safe=False)
 
     # ProductDetail 모델에서 소분류를 추출
-    small_categories = ProductDetail.objects.filter(
-        master_category_name=master_category
-    ).values_list('small_category_name', flat=True).distinct()
+    small_categories = (
+        ProductDetail.objects.filter(master_category_name=master_category)
+        .values_list("small_category_name", flat=True)
+        .distinct()
+    )
 
     small_categories = list(small_categories)
 
