@@ -9,3 +9,6 @@ psycopg2-binary
 
 # psycopg
 psycopg
+
+# django-cors-headers
+django-cors-headers
