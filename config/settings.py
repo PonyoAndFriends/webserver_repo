@@ -48,7 +48,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware"
+    "django.contrib.messages.middleware.MessageMiddleware",
 ]
 
 
@@ -125,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-'''
+"""
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
@@ -136,11 +136,13 @@ CACHES = {
         }
     }
 }   
-'''
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+"""
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 env = environ.Env()
-REDIS_URL="team3-2-cache-0001-001.team3-2-cache.mk7g4j.apn2.cache.amazonaws.com:6379/1"
+REDIS_URL = (
+    "team3-2-cache-0001-001.team3-2-cache.mk7g4j.apn2.cache.amazonaws.com:6379/1"
+)
 # CACHES
 if env("REDIS_URL", default=None):
     CACHES = {
@@ -176,5 +178,5 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-X_FRAME_OPTIONS = 'ALLOWALL'
+X_FRAME_OPTIONS = "ALLOWALL"
 CSRF_COOKIE_SECURE = True

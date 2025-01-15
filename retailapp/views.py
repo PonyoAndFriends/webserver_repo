@@ -7,19 +7,25 @@ from django.db.models import Q
 from django.core.cache import cache
 from retailapp.models import Video
 
+
 def video_list(request):
-    
-    query = request.GET.get('q')  # 검색창 입력값 가져오기
+
+    query = request.GET.get("q")  # 검색창 입력값 가져오기
     if query:
-        videos = Video.objects.filter(title__icontains=query)  # 제목에 검색어 포함된 데이터 필터링
+        videos = Video.objects.filter(
+            title__icontains=query
+        )  # 제목에 검색어 포함된 데이터 필터링
         videosqq = Video.objects.filter(title__icontains=query).query
         print(videosqq)
     else:
         videos = Video.objects.all()  # 검색어 없으면 모든 데이터 가져오기
-        videosq = Video.objects.all().query 
+        videosq = Video.objects.all().query
         print(videosq)
-        
-    return render(request, 'retailapp/snap_brand.html', {'videos': videos, 'query': query})
+
+    return render(
+        request, "retailapp/snap_brand.html", {"videos": videos, "query": query}
+    )
+
 
 def index(request):
     return render(request, "index.html")  # 프로젝트 수준의 templates/index.html
@@ -41,8 +47,10 @@ def detail(request):
 def weather_trend(request):
     return render(request, "retailapp/weather_trend.html")
 
+
 def snap_brand(request):
     return render(request, "retailapp/snap_brand.html")
+
 
 def snap_user(request):
     return render(request, "retailapp/snap_user.html")
@@ -87,8 +95,7 @@ def search_result(request):
         products = products.filter(small_category_name=small_category)
     if query:
         products = products.filter(
-            Q(product_name__icontains=query) |
-            Q(brand_name_kr__icontains=query)
+            Q(product_name__icontains=query) | Q(brand_name_kr__icontains=query)
         )
     # 결과를 컨텍스트에 담아 렌더링
     context = {
@@ -102,6 +109,7 @@ def search_result(request):
     }
 
     return render(request, "retailapp/search_result.html", context)
+
 
 def item_detail(request, product_id):
     product = get_object_or_404(ProductDetail, pk=product_id)
@@ -204,9 +212,9 @@ def get_small_category(request):
     small_categories = (
         ProductDetail.objects.filter(
             cat_depth_1=gender,  # 성별 필터링
-            platform=platform,   # 플랫폼 필터링
+            platform=platform,  # 플랫폼 필터링
             cat_depth_2=master_category,  # 대분류 필터링
-            cat_depth_3=middle_category  # 중분류 필터링
+            cat_depth_3=middle_category,  # 중분류 필터링
         )
         .values_list("small_category_name", flat=True)
         .distinct()

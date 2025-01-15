@@ -18,10 +18,11 @@ class Video(models.Model):
 
     class Meta:
         db_table = '"retail_gold_layer"."youtube_gold_data"'
-        verbose_name = 'Video'
-        verbose_name_plural = 'Videos'
-        managed=False
+        verbose_name = "Video"
+        verbose_name_plural = "Videos"
+        managed = False
         unique_together = ()
+
 
 class ProductDetail(models.Model):
     platform = models.CharField(max_length=100)  # varchar(100)
@@ -46,6 +47,7 @@ class ProductDetail(models.Model):
         db_table = '"retail_gold_layer"."total_product_gold_tb"'  # 테이블 이름
         managed = False  # Django가 테이블을 관리하지 않도록 설정
 
+
 class SilverProductDetail(models.Model):
     platform = models.CharField(max_length=100)  # varchar(100)
     master_category_name = models.CharField(max_length=32)  # varchar(32)
@@ -67,7 +69,9 @@ class SilverProductDetail(models.Model):
         db_table = '"retail_silver_layer"."product_detail_tb"'  # 테이블 이름
         managed = False  # Django가 테이블을 관리하지 않도록 설정
 
+
 from django.db import models
+
 
 class Video(models.Model):
     video_id = models.CharField(max_length=20)
@@ -92,7 +96,6 @@ class Video(models.Model):
         return f"{self.cat_depth4}"
 
 
-
 class Item(models.Model):
     product_id = models.IntegerField()
     review_content = models.TextField(max_length=4000)
@@ -105,6 +108,7 @@ class Item(models.Model):
 
     def __str__(self):
         return f"Review {self.id} for Product {self.product_id}"
+
 
 class SupersetDashboard(models.Model):
     name = models.CharField(max_length=255)

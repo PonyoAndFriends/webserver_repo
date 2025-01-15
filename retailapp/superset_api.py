@@ -1,5 +1,6 @@
 import requests
 
+
 def get_superset_token(base_url, username, password):
     """
     Superset에서 API 토큰을 요청합니다.
@@ -22,6 +23,7 @@ def get_superset_token(base_url, username, password):
         print("[ERROR] 토큰 요청 실패:", response.json())
         return None
 
+
 def fetch_dashboard_data(base_url, token, dashboard_id):
     """
     Superset 대시보드 데이터를 가져옵니다.
@@ -42,6 +44,7 @@ def fetch_dashboard_data(base_url, token, dashboard_id):
     else:
         print("[ERROR] 대시보드 데이터 요청 실패:", response.json())
         return None
+
 
 if __name__ == "__main__":
     # Superset 서버 URL 및 사용자 정보 설정
