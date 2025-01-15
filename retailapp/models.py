@@ -1,5 +1,28 @@
 from django.db import models
 
+
+class Video(models.Model):
+    id = models.CharField(max_length=20, unique=True)
+    gender = models.CharField(max_length=100, blank=True, null=True)
+    cat_depth2 = models.CharField(max_length=100, blank=True, null=True)
+    cat_depth3 = models.CharField(max_length=100, blank=True, null=True)
+    cat_depth4 = models.CharField(max_length=100, blank=True, null=True)
+    channel_title = models.CharField(max_length=100, blank=True, null=True)
+    title = models.CharField(max_length=200, blank=True, null=True)
+    img_url = models.URLField(max_length=1000, blank=True, null=True)
+    duration_seconds = models.IntegerField(blank=True, null=True)
+    published_date = models.CharField(max_length=52, blank=True, null=True)
+    view_count = models.IntegerField(blank=True, null=True)
+    like_count = models.IntegerField(blank=True, null=True)
+    created_at = models.DateField(blank=True, null=True)
+
+    class Meta:
+        db_table = '"retail_gold_layer"."youtube_gold_data"'
+        verbose_name = 'Video'
+        verbose_name_plural = 'Videos'
+        managed=False
+        unique_together = ()
+
 class ProductDetail(models.Model):
     platform = models.CharField(max_length=100)  # varchar(100)
     cat_depth_1 = models.CharField(max_length=32)  # varchar(32)
@@ -43,6 +66,32 @@ class SilverProductDetail(models.Model):
     class Meta:
         db_table = '"retail_silver_layer"."product_detail_tb"'  # 테이블 이름
         managed = False  # Django가 테이블을 관리하지 않도록 설정
+
+from django.db import models
+
+class Video(models.Model):
+    video_id = models.CharField(max_length=20)
+    gender = models.CharField(max_length=100)
+    cat_depth2 = models.CharField(max_length=100)
+    cat_depth3 = models.CharField(max_length=100)
+    cat_depth4 = models.CharField(max_length=100)
+    channel_title = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
+    img_url = models.CharField(max_length=1000)
+    duration_seconds = models.IntegerField()
+    published_date = models.CharField(max_length=52)
+    view_count = models.IntegerField()
+    like_count = models.IntegerField()
+    created_at = models.DateField()
+
+    class Meta:
+        db_table = '"retail_gold_layer"."youtube_gold_data"'  # 테이블 이름
+        managed = False  # Django가 테이블을 관리하지 않도록 설정
+
+    def __str__(self):
+        return f"{self.cat_depth4}"
+
+
 
 class Item(models.Model):
     product_id = models.IntegerField()

@@ -1,4 +1,17 @@
 {% extends 'base.html' %}
-
-{% block title %} User Snap category {% endblock %}
+{% block title %}Superset 대시보드{% endblock %}
 {% block style %}
+    <style>
+        /* iframe 스타일 조정 */
+        .superset-dashboard {
+            width: 100%;
+            height: 800px;
+            border: none;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+<iframe title="스냅랭킹스토리" width="100%" height="750" src="https://app.powerbi.com/view?r=eyJrIjoiMjBhODQwNzYtNTA3Mi00OTFlLTlmMWMtZTBkYTE4ZmZkMDcwIiwidCI6ImU3YzNkNjYzLTVmODMtNDg4Ny1iZDZhLTE5NTViZGVjOTZkNyJ9&pageName=88295c39b491945cb7dc" frameborder="0" allowFullScreen="true"></iframe>    
+    </script>
+{% endblock %}  
+

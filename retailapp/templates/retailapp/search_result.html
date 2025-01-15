@@ -62,12 +62,12 @@
         max-height: 300px;
         object-fit: cover;
     }
-        fieldset {
-            border: none; /* 기본 테두리 제거 */
-            margin: 0; /* 기본 마진 제거 */
-            padding: 0;
-            height: 100px;
-        }
+    fieldset {
+        border: none; /* 기본 테두리 제거 */
+        margin: 0; /* 기본 마진 제거 */
+        padding: 0;
+        height: 100px;
+    }
     .search_input {
         width: 80%;
         height: 50px;
@@ -85,27 +85,44 @@
         border: #000 1px solid;
         overflow: hidden;
     }
+    /* 팝업 스타일 */
     #review-popup {
-            display: none;
-            position: fixed;
-            top: 20%;
-            left: 50%;
-            transform: translate(-50%, -20%);
-            background: white;
-            padding: 20px;
-            border: 1px solid black;
-            z-index: 1000;
-        }
-        #overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        z-index: 1001;
+        width: 50%; /* 팝업 너비 조정 */
+        max-width: 600px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 리뷰 내용 스타일 */
+    #review-content {
+        max-height: 300px; /* 최대 높이 설정 */
+        overflow-y: auto; /* 스크롤 가능 */
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        background-color: #f9f9f9;
+    }
+
+    /* 오버레이 스타일 */
+    #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
 </style>
 {% endblock %}
 
@@ -142,9 +159,9 @@
                             <select name="platform" id="platform" class="custom-select">
                                 <option value="">모두</option>
                                 <option value="musinsa" {% if platform == 'musinsa' %}selected{% endif %}>무신사</option>
-                                <option value="29cm" {% if platform == '29cm' %}selected{% endif %}>29cm</option>
-                                {% if gender == '여성' %}
-                                <option value="ably" {% if platform == 'ably' %}selected{% endif %}>에이블리</option>
+                                <option value="29cm" {% if platform == '29cm' %}selected{% endif %}>29CM</option>
+                                {% if gender == "여성" %}
+                                    <option value="ably" {% if platform == 'ably' %}selected{% endif %}>에이블리</option>
                                 {% endif %}
                             </select>
                         </fieldset>
@@ -179,12 +196,24 @@
                             <legend>소분류</legend>
                             <select name="small_category" id="small_category" class="custom-select">
                                 <option value="">선택</option>
-                                {% for category in small_categories %}
-                                    <option value="{{ category }}" {% if small_category == category %}selected{% endif %}>{{ category }}</option>
-                                {% endfor %}
+                            </select>                            
+                        </fieldset>
+                    </div>
+                    <!-- 정렬 선택 (제거됨) -->
+                    <!--
+                    <div>
+                        <fieldset>
+                            <legend>정렬</legend>
+                            <select name="sort" id="sort" class="custom-select">
+                                <option value="">기본</option>
+                                <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>가격: 낮은 순</option>
+                                <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>가격: 높은 순</option>
+                                <option value="popularity" {% if sort == 'popularity' %}selected{% endif %}>인기 순</option>
+                                <option value="newest" {% if sort == 'newest' %}selected{% endif %}>최신 순</option>
                             </select>
                         </fieldset>
                     </div>
+                    -->
                 </div>
             </form>
         </div>
@@ -198,20 +227,19 @@
         <div class="container px-4 px-lg-5 mt-5" style="margin-bottom: 20px;">
             <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
                 {% for product in products %}
-                    <div class="col mb-6" style="margin-bottom: 20px;" onclick='loadReviews({{ product.product_id }})'>
+                    <div class="col mb-6" style="margin-bottom: 20px;" onclick="loadReviews('{{ product.product_id }}', '{{ product.img_url }}', '{{ product.product_name }}')">
                         <div class="card h-100" style="margin-bottom: 10px; margin-top:20px; ">
                             <img class="card-img-top" style="height: 200px; margin-bottom: 20px; " src="{{ product.img_url }}" alt="{{ product.product_name }}" />
                             <p style="margin: 5px;"><span class="fw-bolder" style="margin-left: 20px;">{{ product.ranking }}위</span></p>
                             <div class="card-body text-center" style="padding-top: 0;">
-                            <p><span class="fw-bolder" style="color: #555;">{{ product.platform }}</span></p>
-                            <h6 class="fw-bolder">
-                                {% if product.product_name|length <= 12 %}
-                                    {{ product.product_name }}
-                                {% else %}
-                                    {{ product.product_name|slice:":12" }}...
-                                {% endif %}
-                            </h6>
-                            
+                                <p><span class="fw-bolder" style="color: #555;">{{ product.platform }}</span></p>
+                                <h6 class="fw-bolder">
+                                    {% if product.product_name|length <= 12 %}
+                                        {{ product.product_name }}
+                                    {% else %}
+                                        {{ product.product_name|slice:":12" }}...
+                                    {% endif %}
+                                </h6>
                                 <p>{{ product.brand_name_kr }}</p>
                                 <p>
                                     <span class="text-muted text-decoration-line-through">{{ product.original_price }}원</span>
@@ -233,165 +261,195 @@
 
 <!-- 리뷰 팝업 -->
 <div id="review-popup">
-    <button onclick="closePopup()">Close</button>
+    <button style="float: right; border-width:0px;" onclick="closePopup()"><i class="fa-solid fa-xmark"></i></button>
     <h2>Reviews</h2>
+    <!-- 리뷰를 표시하는 영역 -->
     <div id="review-content"></div>
 </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script>
-        // AJAX로 리뷰 데이터를 로드
-        function loadReviews(product_id) {
-            $.ajax({
-                url: "{% url 'retailapp:search_result/get_product_reviews_with_cache' %}",  // Django URL Reverse 사용, // Django 백엔드 URL
-                data: { product_id: product_id },       // productId 전달
-                success: function(data) {
-                    // 팝업과 오버레이 표시
-                    $("#overlay").show();
-                    $("#review-popup").show();
+<script>
+    function loadReviews(product_id, img_url, product_name) {
+        $.ajax({
+            url: "{% url 'retailapp:search_result/get_product_reviews_with_cache' %}",  // Django URL Reverse 사용
+            data: { product_id: product_id }, // productId 전달
+            success: function(data) {
+                // 팝업과 오버레이 표시
+                $("#overlay").show();
+                $("#review-popup").show();
 
-                    // 리뷰 데이터 표시
-                    let content = "";
-                    if (data.length === 0) {
-                        content = "<p>No reviews found.</p>";
-                    } else {
-                        content = data.map(review => `
+                // 리뷰 데이터 표시
+                let content = "";
+                if (data.length === 0) {
+                    content = "<p>No reviews found.</p>";
+                } else {
+                    content = data.map(function(review) {
+                        return `
                             <div>
-                                <h4>Platform: ${review.platform}</h4>
+                                <div style="text-align: center;">
+                                    <img src="${img_url}" alt="${product_name}" style="max-width: 100px;">
+                                </div>
+                                <p>${review.platform}</p>
+                                <h3>${product_name}</h3>
                                 <p><strong>Rating:</strong> ${review.review_rating}</p>
                                 <p><strong>Content:</strong> ${review.review_content}</p>
                                 <p><strong>Date:</strong> ${review.review_date}</p>
                             </div>
                             <hr>
-                        `).join("");
-                    }
-                    $("#review-content").html(content);
-                },
-                error: function() {
-                    alert("Error loading reviews.");
+                        `;
+                    }).join("");
                 }
-            });
-        }
+                $("#review-content").html(content);
 
-        // 팝업 닫기
-        function closePopup() {
-            $("#overlay").hide();
-            $("#review-popup").hide();
-        }
-    </script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const genderInputs = document.querySelectorAll('input[name="gender"]');
-        const platformSelect = document.getElementById('platform');
-        const masterCategorySelect = document.getElementById('master_category');
-        const middleCategorySelect = document.getElementById('middle_category');
-        const smallCategorySelect = document.getElementById('small_category');
+                // 스크롤 위치를 맨 위로 설정
+                $("#review-content").scrollTop(0);
+            },
+            error: function() {
+                alert("Error loading reviews.");
+            }
+        });
+    }
 
+    // 팝업 닫기
+    function closePopup() {
+        $("#overlay").hide();
+        $("#review-popup").hide();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // 필드 가져오기
+        const genderFields = document.getElementsByName("gender");
+        const platformField = document.getElementById("platform");
+        const masterCategoryField = document.getElementById("master_category");
+        const middleCategoryField = document.getElementById("middle_category");
+        const smallCategoryField = document.getElementById("small_category");
+        // const sortField = document.getElementById("sort"); // 정렬 필드 제거
+
+        // 대분류와 중분류를 위한 데이터
         const categoryData = {
             "남성": {
                 "아우터": ["재킷", "코트", "패딩", "플리스", "기타"],
                 "상의": ["티셔츠", "셔츠", "니트"],
                 "하의": ["팬츠"],
-                "신발": ["전체"]
+                "신발": ["전체"],
             },
             "여성": {
                 "아우터": ["재킷", "플리스", "코트", "패딩", "기타"],
                 "상의": ["티셔츠", "셔츠", "블라우스", "니트"],
                 "하의": ["팬츠", "원피스", "스커트"],
-                "신발": ["전체"]
-            }
+                "신발": ["전체"],
+            },
         };
 
-        const updatePlatformOptions = (gender, selectedPlatform) => {
-            // 플랫폼 옵션을 서버에서 렌더링하므로 JavaScript에서 다시 설정하지 않음
-            // 필요 시, 동적으로 추가할 수 있음
-        };
-
-        const updateCategories = (gender, selectedMaster, selectedMiddle, selectedSmall) => {
-            // 대분류 업데이트
-            masterCategorySelect.innerHTML = '<option value="">선택</option>';
-            Object.keys(categoryData[gender]).forEach((masterCategory) => {
-                const isSelected = masterCategory === selectedMaster ? 'selected' : '';
-                masterCategorySelect.innerHTML += `<option value="${masterCategory}" ${isSelected}>${masterCategory}</option>`;
+        // 대분류와 중분류 업데이트
+        function updateCategories(selectedGender, selectedMaster, selectedMiddle) {
+            // 대분류 필드 업데이트
+            masterCategoryField.innerHTML = '<option value="">선택</option>';
+            Object.keys(categoryData[selectedGender]).forEach(function(masterCategory) {
+                const isSelected = masterCategory === selectedMaster ? "selected" : "";
+                masterCategoryField.innerHTML += `<option value="${masterCategory}" ${isSelected}>${masterCategory}</option>`;
             });
 
-            // 중분류 업데이트
-            if (selectedMaster && categoryData[gender][selectedMaster]) {
-                middleCategorySelect.innerHTML = '<option value="">선택</option>';
-                categoryData[gender][selectedMaster].forEach((middleCategory) => {
-                    const isSelected = middleCategory === selectedMiddle ? 'selected' : '';
-                    middleCategorySelect.innerHTML += `<option value="${middleCategory}" ${isSelected}>${middleCategory}</option>`;
+            // 중분류 필드 업데이트
+            middleCategoryField.innerHTML = '<option value="">선택</option>';
+            if (selectedMaster && categoryData[selectedGender][selectedMaster]) {
+                categoryData[selectedGender][selectedMaster].forEach(function(middleCategory) {
+                    const isSelected = middleCategory === selectedMiddle ? "selected" : "";
+                    middleCategoryField.innerHTML += `<option value="${middleCategory}" ${isSelected}>${middleCategory}</option>`;
                 });
-            } else {
-                middleCategorySelect.innerHTML = '<option value="">선택</option>';
             }
+        }
+
+        // 소분류 필드를 업데이트하는 함수
+function updateSmallCategories() {
+    const gender = Array.from(genderFields).find(input => input.checked)?.value || "남성";
+    const platform = platformField.value;
+    const catDepth2 = masterCategoryField.value;
+    const catDepth3 = middleCategoryField.value;
+
+    // 소분류를 가져오기 위한 API 요청
+    if (catDepth2 && catDepth3) {
+        fetch(`/retailapp/get-small-categories/?gender=${gender}&platform=${platform}&master_category=${catDepth2}&middle_category=${catDepth3}`)
+            .then(response => response.json())
+            .then(data => {
+                // 소분류 선택 필드 업데이트
+                smallCategoryField.innerHTML = '<option value="">선택</option>';
+                data.forEach(function(category) {
+                    smallCategoryField.innerHTML += `<option value="${category}">${category}</option>`;
+                });
+            })
+            .catch(error => console.error("Error fetching small categories:", error));
+    } else {
+        smallCategoryField.innerHTML = '<option value="">선택</option>';
+    }
+}
+
+        // 필드 변경 시 동작
+        function handleFieldChange() {
+            const selectedGender = Array.from(genderFields).find(input => input.checked)?.value || "남성";
+            const selectedMaster = masterCategoryField.value;
+            const selectedMiddle = middleCategoryField.value;
+            // const selectedSort = sortField.value; // 정렬 필드 제거
+
+            // 대분류와 중분류 업데이트
+            updateCategories(selectedGender, selectedMaster, selectedMiddle);
 
             // 소분류 업데이트
-            if (selectedMiddle) {
-                smallCategorySelect.innerHTML = '<option value="">선택</option>';
-                // 실제 소분류 데이터를 여기에 추가하세요. 예시로 세부1, 세부2 사용
-                // 소분류 데이터가 더 있다면 서버에서 전달받아 사용
-                const smallCategories = ["세부1", "세부2"];
-                smallCategories.forEach((smallCategory) => {
-                    const isSelected = smallCategory === selectedSmall ? 'selected' : '';
-                    smallCategorySelect.innerHTML += `<option value="${smallCategory}" ${isSelected}>${smallCategory}</option>`;
-                });
-            } else {
-                smallCategorySelect.innerHTML = '<option value="">선택</option>';
-            }
-        };
+            updateSmallCategories();
 
-        const handleSelectChange = () => {
-            const selectedGender = document.querySelector('input[name="gender"]:checked')?.value || '남성';
-            const platformValue = platformSelect.value;
-            const masterCategoryValue = masterCategorySelect.value;
-            const middleCategoryValue = middleCategorySelect.value;
-            const smallCategoryValue = smallCategorySelect.value;
-
-            console.log({ selectedGender, platformValue, masterCategoryValue, middleCategoryValue, smallCategoryValue });
-            // 추가 동작 구현 (예: AJAX 요청)
-        };
-
-        genderInputs.forEach((input) => {
-            input.addEventListener('change', () => {
-                const selectedGender = document.querySelector('input[name="gender"]:checked')?.value || '남성';
-                updateCategories(selectedGender, '', '', '');
-                handleSelectChange();
+            console.log({
+                gender: selectedGender,
+                platform: platformField.value,
+                masterCategory: selectedMaster,
+                middleCategory: selectedMiddle,
+                // sort: selectedSort, // 정렬 필드 제거
             });
-        });
-
-        platformSelect.addEventListener('change', handleSelectChange);
-        masterCategorySelect.addEventListener('change', () => {
-            const selectedGender = document.querySelector('input[name="gender"]:checked')?.value || '남성';
-            const selectedMaster = masterCategorySelect.value;
-            updateCategories(selectedGender, selectedMaster, '', '');
-            handleSelectChange();
-        });
-        middleCategorySelect.addEventListener('change', () => {
-            const selectedGender = document.querySelector('input[name="gender"]:checked')?.value || '남성';
-            const selectedMaster = masterCategorySelect.value;
-            const selectedMiddle = middleCategorySelect.value;
-            updateCategories(selectedGender, selectedMaster, selectedMiddle, '');
-            handleSelectChange();
-        });
-        smallCategorySelect.addEventListener('change', handleSelectChange);
+        }
 
         // 초기화
-        const urlParams = new URLSearchParams(window.location.search);
-        const query = urlParams.get('query') || '';
-        const gender = urlParams.get('gender') || '남성';
-        const platform = urlParams.get('platform') || '';
-        const master_category = urlParams.get('master_category') || '';
-        const middle_category = urlParams.get('middle_category') || '';
-        const small_category = urlParams.get('small_category') || '';
+        function initialize() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get("query") || "";
+            const gender = urlParams.get("gender") || "남성";
+            const platform = urlParams.get("platform") || "";
+            const masterCategory = urlParams.get("master_category") || "";
+            const middleCategory = urlParams.get("middle_category") || "";
+            // const sort = urlParams.get("sort") || ""; // 정렬 필드 제거
 
-        document.getElementById('search_input').value = query;
-        document.getElementById(gender === '남성' ? 'male' : 'female').checked = true;
-        updateCategories(gender, master_category, middle_category, small_category);
-        handleSelectChange();
+            // 플랫폼 초기화
+            platformField.value = platform;
+
+            // 대분류와 중분류 초기화
+            updateCategories(gender, masterCategory, middleCategory);
+
+            // 소분류 초기화
+            updateSmallCategories();
+
+            // 정렬 필드 초기화 (제거됨)
+            // sortField.value = sort;
+
+            console.log("Initialized with:", {
+                gender,
+                platform,
+                masterCategory,
+                middleCategory,
+                // sort,
+            });
+        }
+
+        // 이벤트 리스너 추가
+        Array.from(genderFields).forEach(function(input) {
+            input.addEventListener("change", handleFieldChange);
+        });
+        platformField.addEventListener("change", handleFieldChange);
+        masterCategoryField.addEventListener("change", handleFieldChange);
+        middleCategoryField.addEventListener("change", handleFieldChange);
+        // sortField.addEventListener("change", handleFieldChange); // 정렬 필드 제거
+
+        // 실행
+        initialize();
     });
 </script>
 
 {% endblock %}
-

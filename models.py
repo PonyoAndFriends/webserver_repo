@@ -10,6 +10,13 @@ from django.db import models
 # Unable to inspect table 'ably_product_review_detail_tb'
 # The error was: list index out of range
 
+from django.contrib import admin
+from .models import Video
+
+@admin.register(Video)
+class VideoAdmin(admin.ModelAdmin):
+    list_display = ('title', 'cat_depth4', 'view_count', 'like_count')
+    search_fields = ('title', 'cat_depth4')
 
 class AuthGroup(models.Model):
     name = models.CharField(unique=True)
@@ -328,4 +335,27 @@ class YoutubeVideoTb(models.Model):
 
     class Meta:
         managed = False
-        db_table = "youtube_video_tb"
+        db_table = "'retail_gold_layer'.'youtube_gold_data'"
+
+
+class Video(models.Model):
+    id = models.CharField(max_length=20, unique=True)
+    gender = models.CharField(max_length=100, blank=True, null=True)
+    cat_depth2 = models.CharField(max_length=100, blank=True, null=True)
+    cat_depth3 = models.CharField(max_length=100, blank=True, null=True)
+    cat_depth4 = models.CharField(max_length=100, blank=True, null=True)
+    channel_title = models.CharField(max_length=100, blank=True, null=True)
+    title = models.CharField(max_length=200, blank=True, null=True)
+    img_url = models.URLField(max_length=1000, blank=True, null=True)
+    duration_seconds = models.IntegerField(blank=True, null=True)
+    published_date = models.CharField(max_length=52, blank=True, null=True)
+    view_count = models.IntegerField(blank=True, null=True)
+    like_count = models.IntegerField(blank=True, null=True)
+    created_at = models.DateField(blank=True, null=True)
+
+    class Meta:
+        db_table = '"retail_gold_layer"."youtube_gold_data"'
+        verbose_name = 'Video'
+        verbose_name_plural = 'Videos'
+        managed=False
+        unique_together = ()

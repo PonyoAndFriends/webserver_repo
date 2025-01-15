@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Superset 대시보드{% endblock %}
+{% block style %}
+    <style>
+        /* iframe 스타일 조정 */
+        .superset-dashboard {
+            width: 100%;
+            height: 750px;
+            border: none;
+        }
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .search-container {
+            margin: 20px;
+            text-align: center;
+        }
+        .video-list {
+            margin: 20px auto;
+            max-width: 800px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .video-list th, .video-list td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .video-item img {
+            max-width: 120px;
+            height: auto;
+        }
+    </style>
+    </style>
+{% endblock %}
+{% block content %}
+<iframe title="브랜드 랭킹" width="100%" height="750" src="https://app.powerbi.com/view?r=eyJrIjoiYzRiY2U0M2QtYzNkZC00ZDliLWIyNDAtNjA2MzgxZTA2Y2RiIiwidCI6ImU3YzNkNjYzLTVmODMtNDg4Ny1iZDZhLTE5NTViZGVjOTZkNyJ9&pageName=8ef7570de60c2f729e77" frameborder="0" allowFullScreen="true"></iframe>
+<div class="superset-dashboard">
+    <div class="search-container">
+        <form method="get" action="{% url 'retailapp:video_list' %}"> <input type="text" name="q" value="{{ query }}" placeholder="Search by title"> <button type="submit">Search</button> </form>
+    </div>
+
+    <table class="video-list" style = "border: 1px solid #222;">
+        <thead>
+            <tr>
+                <th>Thumbnail</th>
+                <th>Title</th>
+                <th>Channel</th>
+                <th>View Count</th>
+                <th>Published Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for video in videos %}
+                <tr class="video-item">
+                    <td>
+                        <img src="{{ video.img_url }}" alt="Thumbnail">
+                    </td>
+                    <td>{{ video.title }}</td>
+                    <td>{{ video.channel_title }}</td>
+                    <td>{{ video.view_count }}</td>
+                    <td>{{ video.published_date }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No videos found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+</script>
+{% endblock %}  
